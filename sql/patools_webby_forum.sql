@@ -1,1638 +1,1555 @@
--- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
+-- MariaDB dump 10.19  Distrib 10.4.18-MariaDB, for Linux (x86_64)
 --
--- Host: localhost
--- Generation Time: Jul 07, 2021 at 01:09 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.9
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: patools_imperium_forum
+-- ------------------------------------------------------
+-- Server version	10.4.18-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `pa_acl_groups`
+--
+
+DROP TABLE IF EXISTS `pa_acl_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_acl_groups` (
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_option_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_role_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_setting` tinyint(2) NOT NULL DEFAULT 0,
+  KEY `group_id` (`group_id`),
+  KEY `auth_opt_id` (`auth_option_id`),
+  KEY `auth_role_id` (`auth_role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_acl_options`
+--
+
+DROP TABLE IF EXISTS `pa_acl_options`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_acl_options` (
+  `auth_option_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `auth_option` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `is_global` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `is_local` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `founder_only` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`auth_option_id`),
+  UNIQUE KEY `auth_option` (`auth_option`)
+) ENGINE=InnoDB AUTO_INCREMENT=126 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_acl_roles`
+--
+
+DROP TABLE IF EXISTS `pa_acl_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_acl_roles` (
+  `role_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `role_description` text COLLATE utf8_bin NOT NULL,
+  `role_type` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `role_order` smallint(4) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`role_id`),
+  KEY `role_type` (`role_type`),
+  KEY `role_order` (`role_order`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_acl_roles_data`
+--
+
+DROP TABLE IF EXISTS `pa_acl_roles_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_acl_roles_data` (
+  `role_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_option_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_setting` tinyint(2) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`role_id`,`auth_option_id`),
+  KEY `ath_op_id` (`auth_option_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_acl_users`
+--
+
+DROP TABLE IF EXISTS `pa_acl_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_acl_users` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_option_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_role_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `auth_setting` tinyint(2) NOT NULL DEFAULT 0,
+  KEY `user_id` (`user_id`),
+  KEY `auth_option_id` (`auth_option_id`),
+  KEY `auth_role_id` (`auth_role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_attachments`
+--
 
---
--- Database: `patools_webby`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `activity`
---
-
-CREATE TABLE `activity` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_agent` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ip_address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `advanced_unit_scans`
---
-
-CREATE TABLE `advanced_unit_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` int(11) NOT NULL,
-  `ship_id` int(11) NOT NULL,
-  `amount` bigint(20) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `alliances`
---
-
-CREATE TABLE `alliances` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `hidden_resources` bigint(20) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_score` bigint(20) NOT NULL DEFAULT 0,
-  `prod_resources` bigint(20) NOT NULL DEFAULT 0,
-  `size` bigint(20) NOT NULL DEFAULT 0,
-  `score` bigint(20) NOT NULL DEFAULT 0,
-  `value` bigint(20) NOT NULL DEFAULT 0,
-  `avg_size` bigint(20) NOT NULL DEFAULT 0,
-  `avg_value` bigint(20) NOT NULL DEFAULT 0,
-  `avg_score` bigint(20) NOT NULL DEFAULT 0,
-  `members` int(11) NOT NULL DEFAULT 0,
-  `total_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_rank_value` int(11) NOT NULL DEFAULT 0,
-  `day_rank_score` int(11) NOT NULL DEFAULT 0,
-  `day_rank_size` int(11) NOT NULL DEFAULT 0,
-  `day_rank_avg_value` int(11) NOT NULL DEFAULT 0,
-  `day_rank_avg_score` int(11) NOT NULL DEFAULT 0,
-  `day_rank_avg_size` int(11) NOT NULL DEFAULT 0,
-  `day_value` bigint(20) NOT NULL DEFAULT 0,
-  `day_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_size` bigint(20) NOT NULL DEFAULT 0,
-  `day_avg_value` bigint(20) NOT NULL DEFAULT 0,
-  `day_avg_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_avg_size` bigint(20) NOT NULL DEFAULT 0,
-  `growth_value` bigint(20) NOT NULL DEFAULT 0,
-  `growth_score` bigint(20) NOT NULL DEFAULT 0,
-  `growth_size` bigint(20) NOT NULL DEFAULT 0,
-  `growth_rank_value` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_score` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_size` int(11) NOT NULL DEFAULT 0,
-  `growth_percentage_value` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_score` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_size` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_avg_value` bigint(20) NOT NULL DEFAULT 0,
-  `growth_avg_score` bigint(20) NOT NULL DEFAULT 0,
-  `growth_avg_size` bigint(20) NOT NULL DEFAULT 0,
-  `growth_rank_avg_value` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_avg_score` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_avg_size` int(11) NOT NULL DEFAULT 0,
-  `growth_percentage_avg_value` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_avg_score` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_avg_size` double(8,2) NOT NULL DEFAULT 0.00,
-  `nickname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `relation` enum('neutral','friendly','hostile') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_locked` int(11) NOT NULL DEFAULT 0,
-  `day_members` int(11) NOT NULL DEFAULT 0,
-  `growth_members` int(11) NOT NULL DEFAULT 0,
-  `xp` bigint(20) NOT NULL DEFAULT 0,
-  `day_xp` bigint(20) NOT NULL DEFAULT 0,
-  `size_diff` bigint(20) NOT NULL DEFAULT 0,
-  `xp_diff` bigint(20) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `alliance_history`
---
-
-CREATE TABLE `alliance_history` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `rank` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` int(11) NOT NULL,
-  `members` int(11) NOT NULL,
-  `counted_score` bigint(20) NOT NULL,
-  `points` bigint(20) NOT NULL,
-  `total_score` bigint(20) NOT NULL,
-  `total_value` bigint(20) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `alliance_id` int(11) NOT NULL DEFAULT 0,
-  `avg_size` bigint(20) NOT NULL,
-  `avg_value` bigint(20) NOT NULL,
-  `avg_score` bigint(20) NOT NULL,
-  `change_value` bigint(20) NOT NULL DEFAULT 0,
-  `change_score` bigint(20) NOT NULL DEFAULT 0,
-  `change_xp` bigint(20) NOT NULL DEFAULT 0,
-  `change_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_xp` bigint(20) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_avg_score` bigint(20) NOT NULL DEFAULT 0,
-  `change_members` int(11) NOT NULL DEFAULT 0,
-  `xp` bigint(20) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attacks`
---
-
-CREATE TABLE `attacks` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `land_tick` int(11) NOT NULL,
-  `waves` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_closed` tinyint(1) NOT NULL DEFAULT 0,
-  `scheduled_time` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_opened` tinyint(1) NOT NULL DEFAULT 1,
-  `attack_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attack_bookings`
---
-
-CREATE TABLE `attack_bookings` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `attack_id` int(11) NOT NULL,
-  `attack_target_id` int(11) NOT NULL,
-  `land_tick` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `battle_calc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attack_booking_users`
---
-
-CREATE TABLE `attack_booking_users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `booking_id` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attack_targets`
---
-
-CREATE TABLE `attack_targets` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `attack_id` int(11) NOT NULL,
-  `planet_id` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `order` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `battlegroups`
---
-
-CREATE TABLE `battlegroups` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `creator_id` int(11) NOT NULL,
-  `value` bigint(20) NOT NULL DEFAULT 0,
-  `score` bigint(20) NOT NULL DEFAULT 0,
-  `size` bigint(20) NOT NULL DEFAULT 0,
-  `xp` bigint(20) NOT NULL DEFAULT 0,
-  `day_value` bigint(20) NOT NULL DEFAULT 0,
-  `day_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_size` bigint(20) NOT NULL DEFAULT 0,
-  `day_xp` bigint(20) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `growth_percentage_value` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_score` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_size` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_xp` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_value` bigint(20) NOT NULL DEFAULT 0,
-  `growth_score` bigint(20) NOT NULL DEFAULT 0,
-  `growth_size` bigint(20) NOT NULL DEFAULT 0,
-  `growth_xp` bigint(20) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `battlegroup_users`
---
-
-CREATE TABLE `battlegroup_users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `battlegroup_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_pending` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `botan_shortener`
---
-
-CREATE TABLE `botan_shortener` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this entry',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Original URL',
-  `short_url` char(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Shortened URL',
-  `created_at` datetime DEFAULT NULL COMMENT 'Entry date creation'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `callback_query`
---
-
-CREATE TABLE `callback_query` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this query',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-  `message_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
-  `inline_message_id` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Identifier of the message sent via the bot in inline mode, that originated the query',
-  `data` char(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Data associated with the callback button',
-  `created_at` datetime DEFAULT NULL COMMENT 'Entry date creation'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chat`
---
-
-CREATE TABLE `chat` (
-  `id` bigint(20) NOT NULL COMMENT 'Unique user or chat identifier',
-  `type` enum('private','group','supergroup','channel') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Chat type, either private, group, supergroup or channel',
-  `title` char(255) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT 'Chat (group) title, is null if chat type is private',
-  `username` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Username, for private chats, supergroups and channels if available',
-  `all_members_are_administrators` tinyint(1) DEFAULT 0 COMMENT 'True if a all members of this group are admins',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `old_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, this is filled when a group is converted to a supergroup',
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chosen_inline_result`
---
-
-CREATE TABLE `chosen_inline_result` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this entry',
-  `result_id` char(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identifier for this result',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `location` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Location object, user''s location',
-  `inline_message_id` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Identifier of the sent inline message',
-  `query` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'The query that was used to obtain the result',
-  `created_at` datetime DEFAULT NULL COMMENT 'Entry date creation'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `conversation`
---
-
-CREATE TABLE `conversation` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this entry',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique user or chat identifier',
-  `status` enum('active','cancelled','stopped') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active' COMMENT 'Conversation state',
-  `command` varchar(160) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT 'Default command to execute',
-  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Data stored from command',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `development_scans`
---
-
-CREATE TABLE `development_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` int(11) NOT NULL,
-  `light_factory` int(11) NOT NULL,
-  `medium_factory` int(11) NOT NULL,
-  `heavy_factory` int(11) NOT NULL,
-  `wave_amplifier` int(11) NOT NULL,
-  `wave_distorter` int(11) NOT NULL,
-  `metal_refinery` int(11) NOT NULL,
-  `crystal_refinery` int(11) NOT NULL,
-  `eonium_refinery` int(11) NOT NULL,
-  `research_lab` int(11) NOT NULL,
-  `finance_centre` int(11) NOT NULL,
-  `security_centre` int(11) NOT NULL,
-  `military_centre` int(11) NOT NULL,
-  `structure_defence` int(11) NOT NULL,
-  `travel` int(11) NOT NULL,
-  `infrastructure` int(11) NOT NULL,
-  `hulls` int(11) NOT NULL,
-  `waves` int(11) NOT NULL,
-  `core` int(11) NOT NULL,
-  `covert_op` int(11) NOT NULL,
-  `mining` int(11) NOT NULL,
-  `population` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `edited_message`
---
-
-CREATE TABLE `edited_message` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this entry',
-  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-  `message_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `edit_date` datetime DEFAULT NULL COMMENT 'Date the message was edited in timestamp format',
-  `text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8',
-  `entities` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
-  `caption` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For message with caption, the actual UTF-8 text of the caption'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fleet_movements`
---
-
-CREATE TABLE `fleet_movements` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `launch_tick` int(11) DEFAULT NULL,
-  `fleet_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `planet_from_id` int(11) NOT NULL,
-  `planet_to_id` int(11) NOT NULL,
-  `mission_type` enum('Attack','Defend') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `land_tick` int(11) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `eta` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `ship_count` bigint(20) DEFAULT NULL,
-  `source` enum('incoming','launch','jgp','parser','notification') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `galaxies`
---
-
-CREATE TABLE `galaxies` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `x` int(11) NOT NULL,
-  `y` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `hidden_resources` bigint(20) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_xp` bigint(20) NOT NULL DEFAULT 0,
-  `prod_resources` bigint(20) NOT NULL DEFAULT 0,
-  `size` bigint(20) NOT NULL DEFAULT 0,
-  `score` bigint(20) NOT NULL DEFAULT 0,
-  `value` bigint(20) NOT NULL DEFAULT 0,
-  `xp` bigint(20) NOT NULL DEFAULT 0,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `day_rank_value` int(11) NOT NULL DEFAULT 0,
-  `day_rank_score` int(11) NOT NULL DEFAULT 0,
-  `day_rank_size` int(11) NOT NULL DEFAULT 0,
-  `day_rank_xp` int(11) NOT NULL DEFAULT 0,
-  `day_value` bigint(20) NOT NULL DEFAULT 0,
-  `day_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_size` bigint(20) NOT NULL DEFAULT 0,
-  `day_xp` bigint(20) NOT NULL DEFAULT 0,
-  `growth_value` bigint(20) NOT NULL DEFAULT 0,
-  `growth_score` bigint(20) NOT NULL DEFAULT 0,
-  `growth_size` bigint(20) NOT NULL DEFAULT 0,
-  `growth_xp` bigint(20) NOT NULL DEFAULT 0,
-  `growth_rank_value` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_score` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_size` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_xp` int(11) NOT NULL DEFAULT 0,
-  `growth_percentage_value` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_score` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_size` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_xp` double(8,2) NOT NULL DEFAULT 0.00,
-  `ratio` double(8,2) NOT NULL DEFAULT 0.00,
-  `planet_count` int(11) NOT NULL DEFAULT 0,
-  `day_planet_count` int(11) NOT NULL DEFAULT 0,
-  `growth_planet_count` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `galaxy_history`
---
-
-CREATE TABLE `galaxy_history` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `x` int(11) NOT NULL,
-  `y` int(11) NOT NULL,
-  `galaxy_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` bigint(20) NOT NULL,
-  `score` bigint(20) NOT NULL,
-  `value` bigint(20) NOT NULL,
-  `xp` bigint(20) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `galaxy_id` int(11) NOT NULL DEFAULT 0,
-  `change_value` bigint(20) NOT NULL DEFAULT 0,
-  `change_score` bigint(20) NOT NULL DEFAULT 0,
-  `change_xp` bigint(20) NOT NULL DEFAULT 0,
-  `change_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_xp` bigint(20) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0,
-  `planet_count` int(11) NOT NULL DEFAULT 0,
-  `change_planet_count` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inline_query`
---
-
-CREATE TABLE `inline_query` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this query',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `location` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Location of the user',
-  `query` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Text of the query',
-  `offset` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Offset of the result',
-  `created_at` datetime DEFAULT NULL COMMENT 'Entry date creation'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `intel_change`
---
-
-CREATE TABLE `intel_change` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `planet_id` int(11) NOT NULL,
-  `alliance_from_id` int(11) DEFAULT NULL,
-  `alliance_to_id` int(11) DEFAULT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_seen` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `jgp_scans`
---
-
-CREATE TABLE `jgp_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `message`
---
-
-CREATE TABLE `message` (
-  `chat_id` bigint(20) NOT NULL COMMENT 'Unique chat identifier',
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique message identifier',
-  `user_id` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier',
-  `date` datetime DEFAULT NULL COMMENT 'Date the message was sent in timestamp format',
-  `forward_from` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, sender of the original message',
-  `forward_from_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier, chat the original message belongs to',
-  `forward_from_message_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier of the original message in the channel',
-  `forward_date` datetime DEFAULT NULL COMMENT 'date the original message was sent in timestamp format',
-  `reply_to_chat` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-  `reply_to_message` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Message that this message is reply to',
-  `media_group_id` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The unique identifier of a media message group this message belongs to',
-  `text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For text messages, the actual UTF-8 text of the message max message length 4096 char utf8mb4',
-  `entities` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text',
-  `audio` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Audio object. Message is an audio file, information about the file',
-  `document` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Document object. Message is a general file, information about the file',
-  `photo` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Array of PhotoSize objects. Message is a photo, available sizes of the photo',
-  `sticker` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Sticker object. Message is a sticker, information about the sticker',
-  `video` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Video object. Message is a video, information about the video',
-  `voice` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Voice Object. Message is a Voice, information about the Voice',
-  `video_note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'VoiceNote Object. Message is a Video Note, information about the Video Note',
-  `contact` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Contact object. Message is a shared contact, information about the contact',
-  `location` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Location object. Message is a shared location, information about the location',
-  `venue` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Venue object. Message is a Venue, information about the Venue',
-  `caption` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'For message with caption, the actual UTF-8 text of the caption',
-  `new_chat_members` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'List of unique user identifiers, new member(s) were added to the group, information about them (one of these members may be the bot itself)',
-  `left_chat_member` bigint(20) DEFAULT NULL COMMENT 'Unique user identifier, a member was removed from the group, information about them (this member may be the bot itself)',
-  `new_chat_title` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'A chat title was changed to this value',
-  `new_chat_photo` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Array of PhotoSize objects. A chat photo was change to this value',
-  `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the chat photo was deleted',
-  `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created',
-  `supergroup_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the supergroup has been created',
-  `channel_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the channel chat has been created',
-  `migrate_to_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate to chat identifier. The group has been migrated to a supergroup with the specified identifier',
-  `migrate_from_chat_id` bigint(20) DEFAULT NULL COMMENT 'Migrate from chat identifier. The supergroup has been migrated from a group with the specified identifier',
-  `pinned_message` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Message object. Specified message was pinned',
-  `connected_website` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The domain name of the website on which the user has logged in.',
-  `forward_signature` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `forward_sender_name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `edit_date` bigint(20) NOT NULL,
-  `author_signature` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `caption_entities` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `invoice` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `successful_payment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `animation` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `game` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `poll` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `passport_data` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `reply_markup` text COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `migrations`
---
-
-CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `news_scans`
---
-
-CREATE TABLE `news_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `password_resets`
---
-
-CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `planets`
---
-
-CREATE TABLE `planets` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `planet_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nick` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alliance_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `galaxy_id` int(11) NOT NULL DEFAULT 0,
-  `latest_p` int(11) DEFAULT NULL,
-  `latest_d` int(11) DEFAULT NULL,
-  `latest_u` int(11) DEFAULT NULL,
-  `latest_au` int(11) DEFAULT NULL,
-  `amps` int(11) NOT NULL DEFAULT 0,
-  `dists` int(11) NOT NULL DEFAULT 0,
-  `waves` int(11) NOT NULL DEFAULT 0,
-  `min_alert` int(11) NOT NULL DEFAULT 0,
-  `max_alert` int(11) NOT NULL DEFAULT 0,
-  `total_cons` int(11) NOT NULL DEFAULT 0,
-  `x` int(11) NOT NULL,
-  `y` int(11) NOT NULL,
-  `z` int(11) NOT NULL,
-  `planet_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ruler_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `race` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` int(11) NOT NULL,
-  `score` bigint(20) NOT NULL,
-  `value` bigint(20) NOT NULL,
-  `xp` bigint(20) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `covop_hit` tinyint(1) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_xp` bigint(20) NOT NULL DEFAULT 0,
-  `stock_resources` bigint(20) NOT NULL DEFAULT 0,
-  `prod_resources` bigint(20) NOT NULL DEFAULT 0,
-  `government` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `day_rank_value` int(11) NOT NULL DEFAULT 0,
-  `day_rank_score` int(11) NOT NULL DEFAULT 0,
-  `day_rank_size` int(11) NOT NULL DEFAULT 0,
-  `day_rank_xp` int(11) NOT NULL DEFAULT 0,
-  `day_value` bigint(20) NOT NULL DEFAULT 0,
-  `day_score` bigint(20) NOT NULL DEFAULT 0,
-  `day_size` bigint(20) NOT NULL DEFAULT 0,
-  `day_xp` bigint(20) NOT NULL DEFAULT 0,
-  `growth_value` int(11) NOT NULL DEFAULT 0,
-  `growth_score` int(11) NOT NULL DEFAULT 0,
-  `growth_size` int(11) NOT NULL DEFAULT 0,
-  `growth_xp` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_value` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_score` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_size` int(11) NOT NULL DEFAULT 0,
-  `growth_rank_xp` int(11) NOT NULL DEFAULT 0,
-  `growth_percentage_value` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_score` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_size` double(8,2) NOT NULL DEFAULT 0.00,
-  `growth_percentage_xp` double(8,2) NOT NULL DEFAULT 0.00,
-  `round_roids` bigint(20) NOT NULL DEFAULT 0,
-  `tick_roids` bigint(20) NOT NULL DEFAULT 0,
-  `lost_roids` bigint(20) NOT NULL DEFAULT 0,
-  `ticks_roided` int(11) NOT NULL DEFAULT 0,
-  `ticks_roiding` int(11) NOT NULL DEFAULT 0,
-  `rank_round_roids` int(11) NOT NULL DEFAULT 0,
-  `rank_lost_roids` int(11) NOT NULL DEFAULT 0,
-  `day_rank_round_roids` int(11) NOT NULL DEFAULT 0,
-  `day_rank_lost_roids` int(11) NOT NULL DEFAULT 0,
-  `latest_j` int(11) DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `last_covopped` int(11) DEFAULT NULL,
-  `latest_n` int(11) DEFAULT NULL,
-  `age` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `planet_history`
---
-
-CREATE TABLE `planet_history` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `planet_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `x` int(11) NOT NULL,
-  `y` int(11) NOT NULL,
-  `z` int(11) NOT NULL,
-  `planet_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ruler_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `race` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` int(11) NOT NULL,
-  `score` bigint(20) NOT NULL,
-  `value` bigint(20) NOT NULL,
-  `xp` bigint(20) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `change_value` bigint(20) NOT NULL DEFAULT 0,
-  `change_score` bigint(20) NOT NULL DEFAULT 0,
-  `change_xp` bigint(20) NOT NULL DEFAULT 0,
-  `change_size` bigint(20) NOT NULL DEFAULT 0,
-  `rank_value` bigint(20) NOT NULL DEFAULT 0,
-  `rank_score` bigint(20) NOT NULL DEFAULT 0,
-  `rank_xp` bigint(20) NOT NULL DEFAULT 0,
-  `rank_size` bigint(20) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `planet_movements`
---
-
-CREATE TABLE `planet_movements` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `planet_id` int(11) NOT NULL,
-  `from_x` int(11) DEFAULT NULL,
-  `from_y` int(11) DEFAULT NULL,
-  `from_z` int(11) DEFAULT NULL,
-  `to_x` int(11) NOT NULL,
-  `to_y` int(11) NOT NULL,
-  `to_z` int(11) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `planet_scans`
---
-
-CREATE TABLE `planet_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `roid_metal` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `roid_crystal` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `roid_eonium` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `res_metal` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `res_crystal` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `res_eonium` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `factory_usage_light` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `factory_usage_medium` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `factory_usage_heavy` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `prod_res` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `agents` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guards` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `request_limiter`
---
-
-CREATE TABLE `request_limiter` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Unique identifier for this entry',
-  `chat_id` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Unique chat identifier',
-  `inline_message_id` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Identifier of the sent inline message',
-  `method` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Request method',
-  `created_at` datetime DEFAULT NULL COMMENT 'Entry date creation'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `roles`
---
-
-CREATE TABLE `roles` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `scans`
---
-
-CREATE TABLE `scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pa_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `planet_id` int(11) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `time` time NOT NULL DEFAULT '00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `scan_queue`
---
-
-CREATE TABLE `scan_queue` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `processed` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `scan_requests`
---
-
-CREATE TABLE `scan_requests` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `planet_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `tick` int(11) NOT NULL,
-  `scan_id` int(11) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `settings`
---
-
-CREATE TABLE `settings` (
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ships`
---
-
-CREATE TABLE `ships` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `class` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `t1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `t2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `t3` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `init` int(11) NOT NULL,
-  `guns` int(11) NOT NULL,
-  `armor` int(11) NOT NULL,
-  `damage` int(11) DEFAULT NULL,
-  `empres` int(11) NOT NULL,
-  `metal` int(11) NOT NULL,
-  `crystal` int(11) NOT NULL,
-  `eonium` int(11) NOT NULL,
-  `total_cost` int(11) NOT NULL,
-  `race` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `eta` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `telegram_update`
---
-
-CREATE TABLE `telegram_update` (
-  `id` bigint(20) UNSIGNED NOT NULL COMMENT 'Update''s unique identifier',
-  `chat_id` bigint(20) DEFAULT NULL COMMENT 'Unique chat identifier',
-  `message_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Unique message identifier',
-  `inline_query_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Unique inline query identifier',
-  `chosen_inline_result_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Local chosen inline result identifier',
-  `callback_query_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Unique callback query identifier',
-  `edited_message_id` bigint(20) UNSIGNED DEFAULT NULL COMMENT 'Local edited message identifier',
-  `channel_post_id` bigint(20) DEFAULT NULL,
-  `edited_channel_post_id` bigint(20) DEFAULT NULL,
-  `shipping_query_id` bigint(20) DEFAULT NULL,
-  `pre_checkout_query_id` bigint(20) DEFAULT NULL,
-  `poll_id` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ticks`
---
-
-CREATE TABLE `ticks` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `tick` int(11) NOT NULL,
-  `time` datetime NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `length` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `planet_time` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `galaxy_time` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  `alliance_time` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `unit_scans`
---
-
-CREATE TABLE `unit_scans` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `scan_id` int(11) NOT NULL,
-  `ship_id` int(11) NOT NULL,
-  `amount` bigint(20) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
-
-CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL COMMENT 'Unique user identifier',
-  `is_bot` tinyint(1) DEFAULT 0 COMMENT 'True if this user is a bot',
-  `first_name` char(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'User''s first name',
-  `last_name` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'User''s last name',
-  `username` char(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'User''s username',
-  `language_code` char(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'User''s system language',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `planet_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_enabled` tinyint(1) NOT NULL DEFAULT 0,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `timezone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `distorters` int(11) DEFAULT NULL,
-  `military_centres` int(11) DEFAULT NULL,
-  `is_new` tinyint(1) NOT NULL DEFAULT 0,
-  `last_login` timestamp NULL DEFAULT NULL,
-  `role_id` int(11) NOT NULL DEFAULT 0,
-  `tg_username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `stealth` int(11) NOT NULL DEFAULT 0,
-  `allow_calls` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_chat`
---
-
-CREATE TABLE `user_chat` (
-  `user_id` bigint(20) NOT NULL COMMENT 'Unique user identifier',
-  `chat_id` bigint(20) NOT NULL COMMENT 'Unique user or chat identifier'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `activity`
---
-ALTER TABLE `activity`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `activity_user_id_index` (`user_id`),
-  ADD KEY `activity_created_at_index` (`created_at`);
-
---
--- Indexes for table `advanced_unit_scans`
---
-ALTER TABLE `advanced_unit_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `alliances`
---
-ALTER TABLE `alliances`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `alliance_history`
---
-ALTER TABLE `alliance_history`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `attacks`
---
-ALTER TABLE `attacks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attacks_attack_id_index` (`attack_id`);
-
---
--- Indexes for table `attack_bookings`
---
-ALTER TABLE `attack_bookings`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attack_bookings_attack_id_index` (`attack_id`),
-  ADD KEY `attack_bookings_attack_target_id_index` (`attack_target_id`),
-  ADD KEY `attack_bookings_user_id_index` (`user_id`);
-
---
--- Indexes for table `attack_booking_users`
---
-ALTER TABLE `attack_booking_users`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attack_booking_users_booking_id_index` (`booking_id`),
-  ADD KEY `attack_booking_users_user_id_index` (`user_id`);
-
---
--- Indexes for table `attack_targets`
---
-ALTER TABLE `attack_targets`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attack_targets_attack_id_index` (`attack_id`),
-  ADD KEY `attack_targets_planet_id_index` (`planet_id`);
-
---
--- Indexes for table `battlegroups`
---
-ALTER TABLE `battlegroups`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `battlegroup_users`
---
-ALTER TABLE `battlegroup_users`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `botan_shortener`
---
-ALTER TABLE `botan_shortener`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `callback_query`
---
-ALTER TABLE `callback_query`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `chat_id_2` (`chat_id`,`message_id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `chat_id` (`chat_id`),
-  ADD KEY `message_id` (`message_id`);
-
---
--- Indexes for table `chat`
---
-ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `old_id` (`old_id`);
-
---
--- Indexes for table `chosen_inline_result`
---
-ALTER TABLE `chosen_inline_result`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `conversation`
---
-ALTER TABLE `conversation`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `chat_id` (`chat_id`),
-  ADD KEY `status` (`status`);
-
---
--- Indexes for table `development_scans`
---
-ALTER TABLE `development_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `edited_message`
---
-ALTER TABLE `edited_message`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `chat_id_2` (`chat_id`,`message_id`),
-  ADD KEY `chat_id` (`chat_id`),
-  ADD KEY `message_id` (`message_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `fleet_movements`
---
-ALTER TABLE `fleet_movements`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `galaxies`
---
-ALTER TABLE `galaxies`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `galaxy_history`
---
-ALTER TABLE `galaxy_history`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `inline_query`
---
-ALTER TABLE `inline_query`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `intel_change`
---
-ALTER TABLE `intel_change`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `jgp_scans`
---
-ALTER TABLE `jgp_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`chat_id`,`id`),
-  ADD KEY `reply_to_chat_2` (`reply_to_chat`,`reply_to_message`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `forward_from` (`forward_from`),
-  ADD KEY `forward_from_chat` (`forward_from_chat`),
-  ADD KEY `reply_to_chat` (`reply_to_chat`),
-  ADD KEY `reply_to_message` (`reply_to_message`),
-  ADD KEY `left_chat_member` (`left_chat_member`),
-  ADD KEY `migrate_to_chat_id` (`migrate_to_chat_id`),
-  ADD KEY `migrate_from_chat_id` (`migrate_from_chat_id`);
-
---
--- Indexes for table `migrations`
---
-ALTER TABLE `migrations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `news_scans`
---
-ALTER TABLE `news_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `password_resets`
---
-ALTER TABLE `password_resets`
-  ADD KEY `password_resets_email_index` (`email`);
-
---
--- Indexes for table `planets`
---
-ALTER TABLE `planets`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `planets_alliance_id_index` (`alliance_id`),
-  ADD KEY `planets_galaxy_id_index` (`galaxy_id`);
-
---
--- Indexes for table `planet_history`
---
-ALTER TABLE `planet_history`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `planet_movements`
---
-ALTER TABLE `planet_movements`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `planet_scans`
---
-ALTER TABLE `planet_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `request_limiter`
---
-ALTER TABLE `request_limiter`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `scans`
---
-ALTER TABLE `scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `scan_queue`
---
-ALTER TABLE `scan_queue`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `scan_queue_scan_id_unique` (`scan_id`);
-
---
--- Indexes for table `scan_requests`
---
-ALTER TABLE `scan_requests`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `settings`
---
-ALTER TABLE `settings`
-  ADD UNIQUE KEY `settings_name_unique` (`name`);
-
---
--- Indexes for table `ships`
---
-ALTER TABLE `ships`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `telegram_update`
---
-ALTER TABLE `telegram_update`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `message_id` (`chat_id`,`message_id`),
-  ADD KEY `inline_query_id` (`inline_query_id`),
-  ADD KEY `chosen_inline_result_id` (`chosen_inline_result_id`),
-  ADD KEY `callback_query_id` (`callback_query_id`),
-  ADD KEY `edited_message_id` (`edited_message_id`);
-
---
--- Indexes for table `ticks`
---
-ALTER TABLE `ticks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `unit_scans`
---
-ALTER TABLE `unit_scans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `username` (`username`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
-
---
--- Indexes for table `user_chat`
---
-ALTER TABLE `user_chat`
-  ADD PRIMARY KEY (`user_id`,`chat_id`),
-  ADD KEY `chat_id` (`chat_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `activity`
---
-ALTER TABLE `activity`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `advanced_unit_scans`
---
-ALTER TABLE `advanced_unit_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `alliances`
---
-ALTER TABLE `alliances`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `alliance_history`
---
-ALTER TABLE `alliance_history`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attacks`
---
-ALTER TABLE `attacks`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attack_bookings`
---
-ALTER TABLE `attack_bookings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attack_booking_users`
---
-ALTER TABLE `attack_booking_users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attack_targets`
---
-ALTER TABLE `attack_targets`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `battlegroups`
---
-ALTER TABLE `battlegroups`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `battlegroup_users`
---
-ALTER TABLE `battlegroup_users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `botan_shortener`
---
-ALTER TABLE `botan_shortener`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry';
-
---
--- AUTO_INCREMENT for table `chosen_inline_result`
---
-ALTER TABLE `chosen_inline_result`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry';
-
---
--- AUTO_INCREMENT for table `conversation`
---
-ALTER TABLE `conversation`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry';
-
---
--- AUTO_INCREMENT for table `development_scans`
---
-ALTER TABLE `development_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `edited_message`
---
-ALTER TABLE `edited_message`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry';
-
---
--- AUTO_INCREMENT for table `fleet_movements`
---
-ALTER TABLE `fleet_movements`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `galaxies`
---
-ALTER TABLE `galaxies`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `galaxy_history`
---
-ALTER TABLE `galaxy_history`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `intel_change`
---
-ALTER TABLE `intel_change`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `jgp_scans`
---
-ALTER TABLE `jgp_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `migrations`
---
-ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `news_scans`
---
-ALTER TABLE `news_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `planets`
---
-ALTER TABLE `planets`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `planet_history`
---
-ALTER TABLE `planet_history`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `planet_movements`
---
-ALTER TABLE `planet_movements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `planet_scans`
---
-ALTER TABLE `planet_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `request_limiter`
---
-ALTER TABLE `request_limiter`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for this entry';
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `scans`
---
-ALTER TABLE `scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `scan_queue`
---
-ALTER TABLE `scan_queue`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `scan_requests`
---
-ALTER TABLE `scan_requests`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ships`
---
-ALTER TABLE `ships`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ticks`
---
-ALTER TABLE `ticks`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `unit_scans`
---
-ALTER TABLE `unit_scans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `botan_shortener`
---
-ALTER TABLE `botan_shortener`
-  ADD CONSTRAINT `botan_shortener_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `callback_query`
---
-ALTER TABLE `callback_query`
-  ADD CONSTRAINT `callback_query_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `callback_query_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `message` (`chat_id`);
-
---
--- Constraints for table `chosen_inline_result`
---
-ALTER TABLE `chosen_inline_result`
-  ADD CONSTRAINT `chosen_inline_result_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `conversation`
---
-ALTER TABLE `conversation`
-  ADD CONSTRAINT `conversation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `conversation_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`);
-
---
--- Constraints for table `edited_message`
---
-ALTER TABLE `edited_message`
-  ADD CONSTRAINT `edited_message_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
-  ADD CONSTRAINT `edited_message_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `message` (`chat_id`),
-  ADD CONSTRAINT `edited_message_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `inline_query`
---
-ALTER TABLE `inline_query`
-  ADD CONSTRAINT `inline_query_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `message`
---
-ALTER TABLE `message`
-  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`),
-  ADD CONSTRAINT `message_ibfk_3` FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `message_ibfk_4` FOREIGN KEY (`forward_from_chat`) REFERENCES `chat` (`id`),
-  ADD CONSTRAINT `message_ibfk_5` FOREIGN KEY (`reply_to_chat`) REFERENCES `message` (`chat_id`),
-  ADD CONSTRAINT `message_ibfk_6` FOREIGN KEY (`forward_from`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `message_ibfk_7` FOREIGN KEY (`left_chat_member`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `telegram_update`
---
-ALTER TABLE `telegram_update`
-  ADD CONSTRAINT `telegram_update_ibfk_1` FOREIGN KEY (`chat_id`) REFERENCES `message` (`chat_id`),
-  ADD CONSTRAINT `telegram_update_ibfk_2` FOREIGN KEY (`inline_query_id`) REFERENCES `inline_query` (`id`),
-  ADD CONSTRAINT `telegram_update_ibfk_3` FOREIGN KEY (`chosen_inline_result_id`) REFERENCES `chosen_inline_result` (`id`),
-  ADD CONSTRAINT `telegram_update_ibfk_4` FOREIGN KEY (`callback_query_id`) REFERENCES `callback_query` (`id`),
-  ADD CONSTRAINT `telegram_update_ibfk_5` FOREIGN KEY (`edited_message_id`) REFERENCES `edited_message` (`id`);
-
---
--- Constraints for table `user_chat`
---
-ALTER TABLE `user_chat`
-  ADD CONSTRAINT `user_chat_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_chat_ibfk_2` FOREIGN KEY (`chat_id`) REFERENCES `chat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
-
+DROP TABLE IF EXISTS `pa_attachments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_attachments` (
+  `attach_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `post_msg_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `in_message` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `poster_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `is_orphan` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `physical_filename` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `real_filename` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `download_count` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `attach_comment` text COLLATE utf8_bin NOT NULL,
+  `extension` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `mimetype` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `filesize` int(20) unsigned NOT NULL DEFAULT 0,
+  `filetime` int(11) unsigned NOT NULL DEFAULT 0,
+  `thumbnail` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`attach_id`),
+  KEY `filetime` (`filetime`),
+  KEY `post_msg_id` (`post_msg_id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `poster_id` (`poster_id`),
+  KEY `is_orphan` (`is_orphan`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_banlist`
+--
+
+DROP TABLE IF EXISTS `pa_banlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_banlist` (
+  `ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ban_userid` int(10) unsigned NOT NULL DEFAULT 0,
+  `ban_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ban_email` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ban_start` int(11) unsigned NOT NULL DEFAULT 0,
+  `ban_end` int(11) unsigned NOT NULL DEFAULT 0,
+  `ban_exclude` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `ban_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ban_give_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`ban_id`),
+  KEY `ban_end` (`ban_end`),
+  KEY `ban_user` (`ban_userid`,`ban_exclude`),
+  KEY `ban_email` (`ban_email`,`ban_exclude`),
+  KEY `ban_ip` (`ban_ip`,`ban_exclude`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_bbcodes`
+--
+
+DROP TABLE IF EXISTS `pa_bbcodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_bbcodes` (
+  `bbcode_id` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `bbcode_tag` varchar(16) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `bbcode_helpline` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `bbcode_match` text COLLATE utf8_bin NOT NULL,
+  `bbcode_tpl` mediumtext COLLATE utf8_bin NOT NULL,
+  `first_pass_match` mediumtext COLLATE utf8_bin NOT NULL,
+  `first_pass_replace` mediumtext COLLATE utf8_bin NOT NULL,
+  `second_pass_match` mediumtext COLLATE utf8_bin NOT NULL,
+  `second_pass_replace` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`bbcode_id`),
+  KEY `display_on_post` (`display_on_posting`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_bookmarks`
+--
+
+DROP TABLE IF EXISTS `pa_bookmarks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_bookmarks` (
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`topic_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_bots`
+--
+
+DROP TABLE IF EXISTS `pa_bots`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_bots` (
+  `bot_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bot_active` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `bot_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `bot_agent` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `bot_ip` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`bot_id`),
+  KEY `bot_active` (`bot_active`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_config`
+--
+
+DROP TABLE IF EXISTS `pa_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_config` (
+  `config_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `config_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `is_dynamic` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`config_name`),
+  KEY `is_dynamic` (`is_dynamic`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_config_text`
+--
+
+DROP TABLE IF EXISTS `pa_config_text`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_config_text` (
+  `config_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `config_value` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`config_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_confirm`
+--
+
+DROP TABLE IF EXISTS `pa_confirm`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_confirm` (
+  `confirm_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `confirm_type` tinyint(3) NOT NULL DEFAULT 0,
+  `code` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `seed` int(10) unsigned NOT NULL DEFAULT 0,
+  `attempts` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`session_id`,`confirm_id`),
+  KEY `confirm_type` (`confirm_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_disallow`
+--
+
+DROP TABLE IF EXISTS `pa_disallow`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_disallow` (
+  `disallow_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `disallow_username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`disallow_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_drafts`
+--
+
+DROP TABLE IF EXISTS `pa_drafts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_drafts` (
+  `draft_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `save_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `draft_subject` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `draft_message` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`draft_id`),
+  KEY `save_time` (`save_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_ext`
+--
+
+DROP TABLE IF EXISTS `pa_ext`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_ext` (
+  `ext_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ext_active` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `ext_state` text COLLATE utf8_bin NOT NULL,
+  UNIQUE KEY `ext_name` (`ext_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_extension_groups`
+--
+
+DROP TABLE IF EXISTS `pa_extension_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_extension_groups` (
+  `group_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `cat_id` tinyint(2) NOT NULL DEFAULT 0,
+  `allow_group` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `download_mode` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `upload_icon` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `max_filesize` int(20) unsigned NOT NULL DEFAULT 0,
+  `allowed_forums` text COLLATE utf8_bin NOT NULL,
+  `allow_in_pm` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_extensions`
+--
+
+DROP TABLE IF EXISTS `pa_extensions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_extensions` (
+  `extension_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `extension` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`extension_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_forums`
+--
+
+DROP TABLE IF EXISTS `pa_forums`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_forums` (
+  `forum_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `left_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `right_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_parents` mediumtext COLLATE utf8_bin NOT NULL,
+  `forum_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_desc` text COLLATE utf8_bin NOT NULL,
+  `forum_desc_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_desc_options` int(11) unsigned NOT NULL DEFAULT 7,
+  `forum_desc_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_link` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_password` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_style` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_image` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_rules` text COLLATE utf8_bin NOT NULL,
+  `forum_rules_link` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_rules_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_rules_options` int(11) unsigned NOT NULL DEFAULT 7,
+  `forum_rules_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_topics_per_page` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `forum_type` tinyint(4) NOT NULL DEFAULT 0,
+  `forum_status` tinyint(4) NOT NULL DEFAULT 0,
+  `forum_last_post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_last_poster_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_last_post_subject` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_last_post_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `forum_last_poster_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_last_poster_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_flags` tinyint(4) NOT NULL DEFAULT 32,
+  `display_on_index` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_indexing` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_icons` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_prune` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `prune_next` int(11) unsigned NOT NULL DEFAULT 0,
+  `prune_days` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `prune_viewed` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `prune_freq` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `display_subforum_list` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `display_subforum_limit` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `forum_options` int(20) unsigned NOT NULL DEFAULT 0,
+  `forum_posts_approved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_posts_unapproved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_posts_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_topics_approved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_topics_unapproved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `forum_topics_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `enable_shadow_prune` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `prune_shadow_days` mediumint(8) unsigned NOT NULL DEFAULT 7,
+  `prune_shadow_freq` mediumint(8) unsigned NOT NULL DEFAULT 1,
+  `prune_shadow_next` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`forum_id`),
+  KEY `left_right_id` (`left_id`,`right_id`),
+  KEY `forum_lastpost_id` (`forum_last_post_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_forums_access`
+--
+
+DROP TABLE IF EXISTS `pa_forums_access`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_forums_access` (
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`forum_id`,`user_id`,`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_forums_track`
+--
+
+DROP TABLE IF EXISTS `pa_forums_track`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_forums_track` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `mark_time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`,`forum_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_forums_watch`
+--
+
+DROP TABLE IF EXISTS `pa_forums_watch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_forums_watch` (
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `notify_status` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  KEY `forum_id` (`forum_id`),
+  KEY `user_id` (`user_id`),
+  KEY `notify_stat` (`notify_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_groups`
+--
+
+DROP TABLE IF EXISTS `pa_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_groups` (
+  `group_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `group_type` tinyint(4) NOT NULL DEFAULT 1,
+  `group_founder_manage` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `group_skip_auth` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `group_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_desc` text COLLATE utf8_bin NOT NULL,
+  `group_desc_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_desc_options` int(11) unsigned NOT NULL DEFAULT 7,
+  `group_desc_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_display` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `group_avatar` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_avatar_type` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_avatar_width` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `group_avatar_height` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `group_rank` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `group_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_sig_chars` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `group_receive_pm` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `group_message_limit` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `group_legend` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `group_max_recipients` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`group_id`),
+  KEY `group_legend_name` (`group_legend`,`group_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_icons`
+--
+
+DROP TABLE IF EXISTS `pa_icons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_icons` (
+  `icons_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `icons_url` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `icons_width` tinyint(4) NOT NULL DEFAULT 0,
+  `icons_height` tinyint(4) NOT NULL DEFAULT 0,
+  `icons_alt` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `icons_order` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY (`icons_id`),
+  KEY `display_on_posting` (`display_on_posting`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_lang`
+--
+
+DROP TABLE IF EXISTS `pa_lang`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_lang` (
+  `lang_id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `lang_iso` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_dir` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_english_name` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_local_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_author` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`lang_id`),
+  KEY `lang_iso` (`lang_iso`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_log`
+--
+
+DROP TABLE IF EXISTS `pa_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_log` (
+  `log_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `log_type` tinyint(4) NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `reportee_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `log_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `log_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `log_operation` text COLLATE utf8_bin NOT NULL,
+  `log_data` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `log_type` (`log_type`),
+  KEY `forum_id` (`forum_id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `reportee_id` (`reportee_id`),
+  KEY `user_id` (`user_id`),
+  KEY `log_time` (`log_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=242 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_login_attempts`
+--
+
+DROP TABLE IF EXISTS `pa_login_attempts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_login_attempts` (
+  `attempt_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_browser` varchar(150) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_forwarded_for` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  `username_clean` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  KEY `att_ip` (`attempt_ip`,`attempt_time`),
+  KEY `att_for` (`attempt_forwarded_for`,`attempt_time`),
+  KEY `att_time` (`attempt_time`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_migrations`
+--
+
+DROP TABLE IF EXISTS `pa_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_migrations` (
+  `migration_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `migration_depends_on` text COLLATE utf8_bin NOT NULL,
+  `migration_schema_done` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `migration_data_done` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `migration_data_state` text COLLATE utf8_bin NOT NULL,
+  `migration_start_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `migration_end_time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`migration_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_moderator_cache`
+--
+
+DROP TABLE IF EXISTS `pa_moderator_cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_moderator_cache` (
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `group_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `display_on_index` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  KEY `disp_idx` (`display_on_index`),
+  KEY `forum_id` (`forum_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_modules`
+--
+
+DROP TABLE IF EXISTS `pa_modules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_modules` (
+  `module_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `module_enabled` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `module_display` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `module_basename` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `module_class` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `parent_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `left_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `right_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `module_langname` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `module_mode` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `module_auth` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`module_id`),
+  KEY `left_right_id` (`left_id`,`right_id`),
+  KEY `module_enabled` (`module_enabled`),
+  KEY `class_left_id` (`module_class`,`left_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_notification_emails`
+--
+
+DROP TABLE IF EXISTS `pa_notification_emails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_notification_emails` (
+  `notification_type_id` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `item_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `item_parent_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`notification_type_id`,`item_id`,`item_parent_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_notification_types`
+--
+
+DROP TABLE IF EXISTS `pa_notification_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_notification_types` (
+  `notification_type_id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `notification_type_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `notification_type_enabled` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY (`notification_type_id`),
+  UNIQUE KEY `type` (`notification_type_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_notifications`
+--
+
+DROP TABLE IF EXISTS `pa_notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_notifications` (
+  `notification_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `notification_type_id` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `item_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `item_parent_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `notification_read` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `notification_time` int(11) unsigned NOT NULL DEFAULT 1,
+  `notification_data` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`notification_id`),
+  KEY `item_ident` (`notification_type_id`,`item_id`),
+  KEY `user` (`user_id`,`notification_read`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_oauth_accounts`
+--
+
+DROP TABLE IF EXISTS `pa_oauth_accounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_oauth_accounts` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `provider` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `oauth_provider_id` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`user_id`,`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_oauth_states`
+--
+
+DROP TABLE IF EXISTS `pa_oauth_states`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_oauth_states` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `provider` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `oauth_state` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  KEY `user_id` (`user_id`),
+  KEY `provider` (`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_oauth_tokens`
+--
+
+DROP TABLE IF EXISTS `pa_oauth_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_oauth_tokens` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `provider` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `oauth_token` mediumtext COLLATE utf8_bin NOT NULL,
+  KEY `user_id` (`user_id`),
+  KEY `provider` (`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_poll_options`
+--
+
+DROP TABLE IF EXISTS `pa_poll_options`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_poll_options` (
+  `poll_option_id` tinyint(4) NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `poll_option_text` text COLLATE utf8_bin NOT NULL,
+  `poll_option_total` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  KEY `poll_opt_id` (`poll_option_id`),
+  KEY `topic_id` (`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_poll_votes`
+--
+
+DROP TABLE IF EXISTS `pa_poll_votes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_poll_votes` (
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `poll_option_id` tinyint(4) NOT NULL DEFAULT 0,
+  `vote_user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `vote_user_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  KEY `topic_id` (`topic_id`),
+  KEY `vote_user_id` (`vote_user_id`),
+  KEY `vote_user_ip` (`vote_user_ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_posts`
+--
+
+DROP TABLE IF EXISTS `pa_posts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_posts` (
+  `post_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `poster_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `icon_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `poster_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `post_reported` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `enable_bbcode` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_smilies` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_magic_url` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_sig` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `post_username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `post_text` mediumtext COLLATE utf8_bin NOT NULL,
+  `post_checksum` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_attachment` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `bbcode_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_postcount` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `post_edit_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `post_edit_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_edit_user` int(10) unsigned NOT NULL DEFAULT 0,
+  `post_edit_count` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `post_edit_locked` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `post_visibility` tinyint(3) NOT NULL DEFAULT 0,
+  `post_delete_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `post_delete_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_delete_user` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`post_id`),
+  KEY `forum_id` (`forum_id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `poster_ip` (`poster_ip`),
+  KEY `poster_id` (`poster_id`),
+  KEY `tid_post_time` (`topic_id`,`post_time`),
+  KEY `post_username` (`post_username`),
+  KEY `post_visibility` (`post_visibility`)
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_privmsgs`
+--
+
+DROP TABLE IF EXISTS `pa_privmsgs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_privmsgs` (
+  `msg_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `root_level` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `author_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `icon_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `author_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `message_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `enable_bbcode` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_smilies` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_magic_url` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `enable_sig` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `message_subject` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `message_text` mediumtext COLLATE utf8_bin NOT NULL,
+  `message_edit_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `message_edit_user` int(10) unsigned NOT NULL DEFAULT 0,
+  `message_attachment` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `bbcode_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `message_edit_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `message_edit_count` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `to_address` text COLLATE utf8_bin NOT NULL,
+  `bcc_address` text COLLATE utf8_bin NOT NULL,
+  `message_reported` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`msg_id`),
+  KEY `author_ip` (`author_ip`),
+  KEY `message_time` (`message_time`),
+  KEY `author_id` (`author_id`),
+  KEY `root_level` (`root_level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_privmsgs_folder`
+--
+
+DROP TABLE IF EXISTS `pa_privmsgs_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_privmsgs_folder` (
+  `folder_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `folder_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pm_count` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`folder_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_privmsgs_rules`
+--
+
+DROP TABLE IF EXISTS `pa_privmsgs_rules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_privmsgs_rules` (
+  `rule_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `rule_check` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `rule_connection` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `rule_string` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `rule_user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `rule_group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `rule_action` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `rule_folder_id` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`rule_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_privmsgs_to`
+--
+
+DROP TABLE IF EXISTS `pa_privmsgs_to`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_privmsgs_to` (
+  `msg_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `author_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `pm_deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `pm_new` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `pm_unread` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `pm_replied` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `pm_marked` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `pm_forwarded` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `folder_id` int(11) NOT NULL DEFAULT 0,
+  KEY `msg_id` (`msg_id`),
+  KEY `author_id` (`author_id`),
+  KEY `usr_flder_id` (`user_id`,`folder_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_profile_fields`
+--
+
+DROP TABLE IF EXISTS `pa_profile_fields`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_profile_fields` (
+  `field_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `field_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_type` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_ident` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_length` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_minlen` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_maxlen` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_novalue` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_default_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_validation` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_required` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_show_on_reg` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_hide` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_no_view` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_active` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_order` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `field_show_profile` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_show_on_vt` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_show_novalue` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_show_on_pm` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_show_on_ml` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_is_contact` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `field_contact_desc` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_contact_url` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`field_id`),
+  KEY `fld_type` (`field_type`),
+  KEY `fld_ordr` (`field_order`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_profile_fields_data`
+--
+
+DROP TABLE IF EXISTS `pa_profile_fields_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_profile_fields_data` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `pf_phpbb_interests` mediumtext COLLATE utf8_bin NOT NULL,
+  `pf_phpbb_occupation` mediumtext COLLATE utf8_bin NOT NULL,
+  `pf_phpbb_location` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_youtube` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_facebook` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_icq` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_skype` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_twitter` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_website` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_yahoo` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_profile_fields_lang`
+--
+
+DROP TABLE IF EXISTS `pa_profile_fields_lang`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_profile_fields_lang` (
+  `field_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `lang_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `option_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `field_type` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`field_id`,`lang_id`,`option_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_profile_lang`
+--
+
+DROP TABLE IF EXISTS `pa_profile_lang`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_profile_lang` (
+  `field_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `lang_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `lang_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_explain` text COLLATE utf8_bin NOT NULL,
+  `lang_default_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`field_id`,`lang_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_ranks`
+--
+
+DROP TABLE IF EXISTS `pa_ranks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_ranks` (
+  `rank_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `rank_title` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `rank_min` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `rank_special` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `rank_image` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`rank_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_reports`
+--
+
+DROP TABLE IF EXISTS `pa_reports`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_reports` (
+  `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `reason_id` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_notify` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `report_closed` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `report_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `report_text` mediumtext COLLATE utf8_bin NOT NULL,
+  `pm_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `reported_post_enable_bbcode` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `reported_post_enable_smilies` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `reported_post_enable_magic_url` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `reported_post_text` mediumtext COLLATE utf8_bin NOT NULL,
+  `reported_post_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `reported_post_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`report_id`),
+  KEY `post_id` (`post_id`),
+  KEY `pm_id` (`pm_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_reports_reasons`
+--
+
+DROP TABLE IF EXISTS `pa_reports_reasons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_reports_reasons` (
+  `reason_id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `reason_title` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `reason_description` mediumtext COLLATE utf8_bin NOT NULL,
+  `reason_order` smallint(4) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`reason_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_search_results`
+--
+
+DROP TABLE IF EXISTS `pa_search_results`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_search_results` (
+  `search_key` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `search_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `search_keywords` mediumtext COLLATE utf8_bin NOT NULL,
+  `search_authors` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`search_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_search_wordlist`
+--
+
+DROP TABLE IF EXISTS `pa_search_wordlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_search_wordlist` (
+  `word_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `word_text` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `word_common` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `word_count` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`word_id`),
+  UNIQUE KEY `wrd_txt` (`word_text`),
+  KEY `wrd_cnt` (`word_count`)
+) ENGINE=InnoDB AUTO_INCREMENT=2713 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_search_wordmatch`
+--
+
+DROP TABLE IF EXISTS `pa_search_wordmatch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_search_wordmatch` (
+  `post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `word_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `title_match` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  UNIQUE KEY `un_mtch` (`word_id`,`post_id`,`title_match`),
+  KEY `word_id` (`word_id`),
+  KEY `post_id` (`post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_sessions`
+--
+
+DROP TABLE IF EXISTS `pa_sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_sessions` (
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `session_last_visit` int(11) unsigned NOT NULL DEFAULT 0,
+  `session_start` int(11) unsigned NOT NULL DEFAULT 0,
+  `session_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `session_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_browser` varchar(150) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_forwarded_for` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_page` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `session_viewonline` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `session_autologin` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `session_admin` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `session_forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`session_id`),
+  KEY `session_time` (`session_time`),
+  KEY `session_user_id` (`session_user_id`),
+  KEY `session_fid` (`session_forum_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_sessions_keys`
+--
+
+DROP TABLE IF EXISTS `pa_sessions_keys`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_sessions_keys` (
+  `key_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `last_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `last_login` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`key_id`,`user_id`),
+  KEY `last_login` (`last_login`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_sitelist`
+--
+
+DROP TABLE IF EXISTS `pa_sitelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_sitelist` (
+  `site_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `site_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `site_hostname` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ip_exclude` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`site_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_smilies`
+--
+
+DROP TABLE IF EXISTS `pa_smilies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_smilies` (
+  `smiley_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `emotion` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `smiley_url` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `smiley_width` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `smiley_height` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `smiley_order` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY (`smiley_id`),
+  KEY `display_on_post` (`display_on_posting`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_styles`
+--
+
+DROP TABLE IF EXISTS `pa_styles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_styles` (
+  `style_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `style_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `style_copyright` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `style_active` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `style_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT 'kNg=',
+  `style_parent_id` int(4) unsigned NOT NULL DEFAULT 0,
+  `style_parent_tree` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`style_id`),
+  UNIQUE KEY `style_name` (`style_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_teampage`
+--
+
+DROP TABLE IF EXISTS `pa_teampage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_teampage` (
+  `teampage_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `teampage_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `teampage_position` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `teampage_parent` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`teampage_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_topics`
+--
+
+DROP TABLE IF EXISTS `pa_topics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_topics` (
+  `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `icon_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `topic_attachment` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `topic_reported` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `topic_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `topic_poster` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `topic_time_limit` int(11) unsigned NOT NULL DEFAULT 0,
+  `topic_views` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `topic_status` tinyint(3) NOT NULL DEFAULT 0,
+  `topic_type` tinyint(3) NOT NULL DEFAULT 0,
+  `topic_first_post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_first_poster_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `topic_first_poster_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_last_post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_last_poster_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_last_poster_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_last_poster_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_last_post_subject` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_last_post_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `topic_last_view_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `topic_moved_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_bumped` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `topic_bumper` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `poll_title` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `poll_start` int(11) unsigned NOT NULL DEFAULT 0,
+  `poll_length` int(11) unsigned NOT NULL DEFAULT 0,
+  `poll_max_options` tinyint(4) NOT NULL DEFAULT 1,
+  `poll_last_vote` int(11) unsigned NOT NULL DEFAULT 0,
+  `poll_vote_change` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `topic_visibility` tinyint(3) NOT NULL DEFAULT 0,
+  `topic_delete_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `topic_delete_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_delete_user` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_posts_approved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `topic_posts_unapproved` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `topic_posts_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`topic_id`),
+  KEY `forum_id` (`forum_id`),
+  KEY `forum_id_type` (`forum_id`,`topic_type`),
+  KEY `last_post_time` (`topic_last_post_time`),
+  KEY `fid_time_moved` (`forum_id`,`topic_last_post_time`,`topic_moved_id`),
+  KEY `topic_visibility` (`topic_visibility`),
+  KEY `forum_vis_last` (`forum_id`,`topic_visibility`,`topic_last_post_id`),
+  KEY `latest_topics` (`forum_id`,`topic_last_post_time`,`topic_last_post_id`,`topic_moved_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_topics_posted`
+--
+
+DROP TABLE IF EXISTS `pa_topics_posted`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_topics_posted` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_posted` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`,`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_topics_track`
+--
+
+DROP TABLE IF EXISTS `pa_topics_track`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_topics_track` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `forum_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `mark_time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`,`topic_id`),
+  KEY `forum_id` (`forum_id`),
+  KEY `topic_id` (`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_topics_watch`
+--
+
+DROP TABLE IF EXISTS `pa_topics_watch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_topics_watch` (
+  `topic_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `notify_status` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  KEY `topic_id` (`topic_id`),
+  KEY `user_id` (`user_id`),
+  KEY `notify_stat` (`notify_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_user_group`
+--
+
+DROP TABLE IF EXISTS `pa_user_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_user_group` (
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `group_leader` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `user_pending` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  KEY `group_id` (`group_id`),
+  KEY `user_id` (`user_id`),
+  KEY `group_leader` (`group_leader`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_user_notifications`
+--
+
+DROP TABLE IF EXISTS `pa_user_notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_user_notifications` (
+  `item_type` varchar(165) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `item_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `method` varchar(165) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `notify` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  UNIQUE KEY `itm_usr_mthd` (`item_type`,`item_id`,`user_id`,`method`),
+  KEY `user_id` (`user_id`),
+  KEY `uid_itm_id` (`user_id`,`item_id`),
+  KEY `usr_itm_tpe` (`user_id`,`item_type`,`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_users`
+--
+
+DROP TABLE IF EXISTS `pa_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_users` (
+  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_type` tinyint(2) NOT NULL DEFAULT 0,
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT 3,
+  `user_permissions` mediumtext COLLATE utf8_bin NOT NULL,
+  `user_perm_from` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_regdate` int(11) unsigned NOT NULL DEFAULT 0,
+  `username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `username_clean` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_password` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_passchg` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_email` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_birthday` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_lastvisit` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_lastmark` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_lastpost_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_lastpage` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_last_confirm_key` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_last_search` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_warnings` tinyint(4) NOT NULL DEFAULT 0,
+  `user_last_warning` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_login_attempts` tinyint(4) NOT NULL DEFAULT 0,
+  `user_inactive_reason` tinyint(2) NOT NULL DEFAULT 0,
+  `user_inactive_time` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_posts` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_lang` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_timezone` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_dateformat` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT 'd M Y H:i',
+  `user_style` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_rank` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `user_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_new_privmsg` int(4) NOT NULL DEFAULT 0,
+  `user_unread_privmsg` int(4) NOT NULL DEFAULT 0,
+  `user_last_privmsg` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_message_rules` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `user_full_folder` int(11) NOT NULL DEFAULT -3,
+  `user_emailtime` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_topic_show_days` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `user_topic_sortby_type` varchar(1) COLLATE utf8_bin NOT NULL DEFAULT 't',
+  `user_topic_sortby_dir` varchar(1) COLLATE utf8_bin NOT NULL DEFAULT 'd',
+  `user_post_show_days` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `user_post_sortby_type` varchar(1) COLLATE utf8_bin NOT NULL DEFAULT 't',
+  `user_post_sortby_dir` varchar(1) COLLATE utf8_bin NOT NULL DEFAULT 'a',
+  `user_notify` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `user_notify_pm` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_notify_type` tinyint(4) NOT NULL DEFAULT 0,
+  `user_allow_pm` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_allow_viewonline` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_allow_viewemail` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_allow_massemail` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_options` int(11) unsigned NOT NULL DEFAULT 230271,
+  `user_avatar` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_avatar_type` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_avatar_width` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `user_avatar_height` smallint(4) unsigned NOT NULL DEFAULT 0,
+  `user_sig` mediumtext COLLATE utf8_bin NOT NULL,
+  `user_sig_bbcode_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_sig_bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_jabber` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_actkey` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `reset_token` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `reset_token_expiration` int(11) unsigned NOT NULL DEFAULT 0,
+  `user_newpasswd` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_form_salt` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_new` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `user_reminded` tinyint(4) NOT NULL DEFAULT 0,
+  `user_reminded_time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username_clean` (`username_clean`),
+  KEY `user_birthday` (`user_birthday`),
+  KEY `user_type` (`user_type`),
+  KEY `user_email` (`user_email`)
+) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_warnings`
+--
+
+DROP TABLE IF EXISTS `pa_warnings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_warnings` (
+  `warning_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `post_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `log_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `warning_time` int(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`warning_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_words`
+--
+
+DROP TABLE IF EXISTS `pa_words`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_words` (
+  `word_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `replacement` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  PRIMARY KEY (`word_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pa_zebra`
+--
+
+DROP TABLE IF EXISTS `pa_zebra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pa_zebra` (
+  `user_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `zebra_id` int(10) unsigned NOT NULL DEFAULT 0,
+  `friend` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `foe` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`,`zebra_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-03-05 19:57:02
