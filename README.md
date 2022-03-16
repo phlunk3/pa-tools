@@ -1,8 +1,7 @@
 # Planetarion Alliance Toolset
 
 Steps to install:
-* Replace all occurrences of webby.yourdomain.tld
-* Replace all occurrences of webby with your ally name (no spaces!)
+* Replace all occurrences of webby.domain.tld
 * Upload files to your hosting account
 * Create a symbolic link from /path/to/alliance/public to your webserver public directory (public_html, htdocs, www)
 * Create a MySQL user named patools_webby with databases patools_webby patools_webby_forum

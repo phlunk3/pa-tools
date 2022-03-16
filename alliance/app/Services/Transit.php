@@ -43,10 +43,10 @@ class Transit
 			return 'SMS disabled for "' . $user['name'] . '" for this tick';
 		
 		// send sms
-		$from = '+447936560084';
+		$from = '+447979797979';
 		$messageId = time();
 		$text = $message;
-		$infobip['name'] = env('INFOBIP_USERNAME', '');
+		$infobip['username'] = env('INFOBIP_USERNAME');
 		$infobip['password'] = env('INFOBIP_PASSWORD');
 
 		$postUrl = "https://" . env('INFOBIP_URL') . "/sms/2/text/advanced";
@@ -116,7 +116,7 @@ class Transit
 		// place call
 		$from = '+44797979797';
 		$messageId = time();
-		$infobip['name'] = env('INFOBIP_USERNAME', '');
+		$infobip['username'] = env('INFOBIP_USERNAME');
 		$infobip['password'] = env('INFOBIP_PASSWORD');
 
 		$postUrl = "https://" . env('INFOBIP_URL') . "/tts/3/single";
