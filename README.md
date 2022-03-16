@@ -4,8 +4,8 @@ Steps to install:
 * Replace all occurrences of webby.domain.tld
 * Upload files to your hosting account
 * Create a symbolic link from /path/to/alliance/public to your webserver public directory (public_html, htdocs, www)
-* Create a MySQL user named patools_webby with databases patools_webby patools_webby_forum
-* Import MySQL Data (patools_webby.sql and patools_webby_forum.sql)
+* Create a MySQL user named `patools_webby` with databases `patools_webby` and `patools_webby_forum`
+* Import MySQL Data (`patools_webby.sql` and `patools_webby_forum.sql`)
 * Create a Telegram Bot (see @BotFather on TG for instructions)
 * Open `.env` at `alliance/.env` configure, as desired
 * Open `forums/config.php` and configure
