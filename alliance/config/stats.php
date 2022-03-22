@@ -2,6 +2,6 @@
 
  return [
 
-    'ships' => env('PA_URL', 'http://beta.planetarion.com') . '/manual.pl?action=statsxml'
+    'ships' => env('PA_URL', 'http://game.planetarion.com') . '/manual.pl?action=statsxml'
 
  ];
