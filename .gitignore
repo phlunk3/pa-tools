@@ -1,2 +1,7 @@
 
 .DS_Store
+alliance/vendor
+alliance/bootstrap/cache
+alliance/.env
+docker/docker-compose.yml
+storage

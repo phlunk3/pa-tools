@@ -1,0 +1,38 @@
+services:
+  toolsdb:
+    hostname: toolsdb
+    container_name: toolsdb
+    image: mariadb:10
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=changeme
+      - MYSQL_DATABASE=tools
+      - MYSQL_USER=tools
+      - MYSQL_PASSWORD=changeme
+    expose:
+      - 3306
+
+  toolsphp:
+    container_name: toolsphp
+    build: ./apache/
+    volumes:
+      - ../alliance/:/var/www/
+    ports:
+      - 80:80
+    restart: always
+    links:
+      - "toolsdb:database"
+    environment:
+      - DBUSER=tools
+      - DBDB=tools
+      - DBPASS=changeme
+      - DBHOST=database 
+      - TOOLSNAME=toolsforfools
+      - TOOLSURL=localhost
+      - TOOLSSCHEMA=http
+      - TOOLSDEBUG=true
+
+volumes:
+  db_data:
