@@ -53,23 +53,18 @@ class Eff
 
 		if($this->name) {
 			if(Ship::where('name', 'LIKE', '%' . $this->name . '%')->count() == 1) {
-				$ship = Ship::where('name', 'LIKE', '%' . $this->name . '%')->first();
-			} else {
-				if(Ship::where('name', 'LIKE', '%' . $this->name . '%')->count() == 0) {
-					return "Can't find a ship with that name";
-				} else {
-					
-					// Check for actual name
-					if($ship = Ship::where('name', 'LIKE', '%' . $this->name)->count() == 1) {
-						$ship = Ship::where('name', 'LIKE', '%' . $this->name)->first();
-					} 
-					// Too many matches
-					else {
-						$ships = Ship::where('name', 'LIKE', '%' . $this->name . '%')->get()->pluck('name')->toArray();
-						return "Ship name is too ambiguous (" . implode(", ", $ships) . ")";
-					}
-				}
-			}
+                                $ship = Ship::where('name', 'LIKE', '%' . $this->name . '%')->first();
+                        } elseif(Ship::where('name', 'LIKE', '%' . $this->name . '%')->count() == 0) {
+                                return "Can't find a ship with that name";
+                        } elseif(Ship::where('name', 'LIKE', '%' . $this->name)->count() == 1) {
+                                $ship = Ship::where('name', 'LIKE', '%' . $this->name)->first();
+                        } elseif(Ship::where('name', 'LIKE', $this->name)->count() == 1) {
+                                $ship = Ship::where('name', 'LIKE', $this->name)->first();
+                        }
+                        if(!isset($ship)) {
+                            $ships = Ship::where('name', 'LIKE', '%' . $this->name . '%')->get()->pluck('name')->toArray();
+                            return "Ship name is too ambiguous (" . implode(", ", $ships) . ")";
+                        }
 		} 
 
 		if($this->id) $ship = Ship::find($this->id);

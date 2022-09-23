@@ -30,14 +30,18 @@ class Cost
 		if(intval($ship)) {
 			$ship = Ship::find($ship);
 		} else {
-			if(Ship::where('name', 'LIKE', '%' . $ship . '%')->count() == 1) {
+		    	if(Ship::where('name', 'LIKE', '%' . $ship . '%')->count() == 1) {
 				$ship = Ship::where('name', 'LIKE', '%' . $ship . '%')->first();
-			} else {
-				if(Ship::where('name', 'LIKE', '%' . $ship . '%')->count() == 0) {
-					return "Can't find a ship with that name";
-				} else {
-					return "Ship name is too ambiguous";
-				}
+		    	} elseif(Ship::where('name', 'LIKE', '%' . $ship . '%')->count() == 0) {
+				return "Can't find a ship with that name";
+		    	} elseif(Ship::where('name', 'LIKE', '%' . $ship)->count() == 1) {
+				$ship = Ship::where('name', 'LIKE', '%' . $ship)->first();
+		    	} elseif(Ship::where('name', 'LIKE', $ship)->count() == 1) {
+				$ship = Ship::where('name', 'LIKE', $ship)->first();
+		    	}
+			if(!isset($ship)) {
+			    $ships = Ship::where('name', 'LIKE', '%' . $this->name . '%')->get()->pluck('name')->toArray();
+			    return "Ship name is too ambiguous (" . implode(", ", $ships) . ")";
 			}
 		}
 

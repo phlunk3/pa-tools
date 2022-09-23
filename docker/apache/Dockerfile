@@ -16,6 +16,7 @@ ENV TOOLSIMAPPASS=
 ENV TGBOTAPIKEY=
 ENV TGBOTNAME=
 ENV TGBOTADMINID=
+ENV FORUMSENABLED 0
 RUN apt-get update && apt-get install -y libzip-dev libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/*
 RUN docker-php-ext-install mysqli pdo pdo_mysql zip \
 	&& docker-php-ext-enable mysqli pdo_mysql zip \

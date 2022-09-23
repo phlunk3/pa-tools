@@ -81,7 +81,9 @@ class RegisterController extends Controller
 		}
 		
 		// create forum account
-		file_get_contents('https://forum.domain.tld/user-add.php?username=' . $data['name'] . '&password=' . $data['password'] . '&email=' . $data['email']);
+		if(getenv("FORUMSENABLED") !== false) {
+			file_get_contents('https://forum.domain.tld/user-add.php?username=' . $data['name'] . '&password=' . $data['password'] . '&email=' . $data['email']);
+		}
 		
 		return User::create($user);
 	}
