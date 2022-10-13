@@ -79,12 +79,17 @@ class MembersController extends ApiController
 		$user->fill($request->all());
 		
 		// handle password
-		if (isset($request->password) && strlen($request->password) > 0):
+		$updated = false;
+		if (isset($request->password) && strlen($request->password) > 0) {
 			$user->password = Hash::make($request->password);
-			file_get_contents('https://forum.domain.tld/user-password.php?username=' . $user->name . '&password=' . $request->password);
-		endif;
+			$updated = true;
+		}
 
-		var_dump($user->password);
+                if($updated && getenv("FORUMSENABLED") !== false) {
+			// todo - needs a useful url?
+			file_get_contents('https://forum.domain.tld/user-password.php?username=' . $user->name . '&password=' . $request->password);
+		}
+
 		if($request->input('x') && $request->input('y') && $request->input('z')) {
 
 			$planet = PlanetHistory::where('x', $request->input('x'))

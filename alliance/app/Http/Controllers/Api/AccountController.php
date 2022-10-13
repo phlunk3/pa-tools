@@ -47,8 +47,10 @@ class AccountController extends ApiController
 		}
 		
 		// update password
-		file_get_contents('https://forum.domain.tld/user-password.php?username=' . $request->input('name') . '&password=' . $request->input('password'));
-		
+		if(getenv("FORUMSENABLED") !== false) {
+			// todo - no useful domain here..
+			file_get_contents('https://forum.domain.tld/user-password.php?username=' . $request->input('name') . '&password=' . $request->input('password'));
+		}
 		return User::where('id', Auth::user()->id)->update([
 			'name'			  	=> $request->input('name'),
 			'planet_id'		 	=> (isset($planet)) ? $planet->id : 0,
