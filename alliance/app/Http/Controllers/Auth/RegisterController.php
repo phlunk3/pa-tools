@@ -81,7 +81,7 @@ class RegisterController extends Controller
 		}
 		
 		// create forum account
-		if(getenv("FORUMSENABLED") !== false) {
+		if(getenv("FORUMSENABLED") !== "false") {
 			file_get_contents('https://forum.domain.tld/user-add.php?username=' . $data['name'] . '&password=' . $data['password'] . '&email=' . $data['email']);
 		}
 		

@@ -85,7 +85,7 @@ class MembersController extends ApiController
 			$updated = true;
 		}
 
-                if($updated && getenv("FORUMSENABLED") !== false) {
+                if($updated && getenv("FORUMSENABLED") !== "false") {
 			// todo - needs a useful url?
 			file_get_contents('https://forum.domain.tld/user-password.php?username=' . $user->name . '&password=' . $request->password);
 		}

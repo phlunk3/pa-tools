@@ -47,7 +47,7 @@ class AccountController extends ApiController
 		}
 		
 		// update password
-		if(getenv("FORUMSENABLED") !== false) {
+		if(getenv("FORUMSENABLED") !== "false") {
 			// todo - no useful domain here..
 			file_get_contents('https://forum.domain.tld/user-password.php?username=' . $request->input('name') . '&password=' . $request->input('password'));
 		}
