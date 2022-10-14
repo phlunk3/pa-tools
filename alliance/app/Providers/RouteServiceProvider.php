@@ -23,8 +23,10 @@ class RouteServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		//
-
+		// force https where requested
+		if(getenv("TOOLSSCHEMA") == "https") {
+			\URL::forceScheme('https');
+		}
 		parent::boot();
 	}
 
