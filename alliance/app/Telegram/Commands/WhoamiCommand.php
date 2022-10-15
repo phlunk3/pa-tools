@@ -2,6 +2,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 use App;
 use Log;
@@ -10,7 +11,7 @@ class WhoamiCommand extends SystemCommand {
 	protected $name = 'whoami';
 	protected $usage = '/whoami';
 
-	public function execute()
+	public function execute() : ServerResponse
 	{
 		$message = $this->getMessage();
 

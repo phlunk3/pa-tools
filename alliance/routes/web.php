@@ -10,8 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
 
 Route::post('/outgoing', function()
 {

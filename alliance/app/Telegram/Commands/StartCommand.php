@@ -3,6 +3,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\ServerResponse;
 use App;
 use Log;
 
@@ -10,7 +11,7 @@ class StartCommand extends SystemCommand {
 	protected $name = 'start';
 	protected $usage = '/start';
 
-	public function execute()
+	public function execute() : ServerResponse
 	{
 		$message = $this->getMessage();
 

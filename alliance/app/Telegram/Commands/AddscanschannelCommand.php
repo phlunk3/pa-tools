@@ -3,6 +3,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\ServerResponse;
 use App\Setting;
 use App;
 use Config;
@@ -12,7 +13,7 @@ class AddscanschannelCommand extends SystemCommand {
 		protected $name = 'addscanschannel';
 		protected $usage = '/addscanschannel';
 
-		public function execute()
+		public function execute() : ServerResponse
 		{
 				$admin = Config::get('phptelegrambot.admins')[0];
 

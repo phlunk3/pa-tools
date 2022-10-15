@@ -2,6 +2,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 use App\Setting;
 use App;
@@ -12,7 +13,7 @@ class AddchannelCommand extends SystemCommand {
 		protected $name = 'addchannel';
 		protected $usage = '/addchannel';
 
-		public function execute()
+		public function execute() : ServerResponse
 		{
 				$admin = Config::get('phptelegrambot.admins')[0];
 

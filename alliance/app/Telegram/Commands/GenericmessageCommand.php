@@ -3,6 +3,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Entities\ServerResponse;
 use App\Telegram\Custom\IntelCommand;
 use App\Telegram\Custom\AttacksCommand;
 use App\Telegram\Custom\ShipCommand;
@@ -19,7 +20,7 @@ use Log;
 
 class GenericmessageCommand extends SystemCommand {
 
-	public function execute()
+	public function execute() : ServerResponse
 	{
 		$message = $this->getMessage();
 
