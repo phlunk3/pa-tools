@@ -6,6 +6,8 @@ echo "DB Host: $DBHOST"
 echo "DB: $DBDB"
 echo "DB User: $DBUSER"
 echo "DB Pass: $DBPASS"
+echo "DB Port: $DBPORT"
+echo "Debug Mode: $TOOLSDEBUG"
 echo "SMTP Host: $TOOLSSMTPHOST"
 echo "SMTP Port: $TOOLSSMTPPORT"
 echo "SMTP User: $TOOLSSMTPUSER"
@@ -28,6 +30,8 @@ sed -i "s/TOOLSDBUSER/$DBUSER/g" /var/www/.env
 sed -i "s/TOOLSDBPASS/$DBPASS/g" /var/www/.env
 sed -i "s/TOOLSDBDB/$DBDB/g" /var/www/.env
 sed -i "s/TOOLSDBHOST/$DBHOST/g" /var/www/.env
+sed -i "s/TOOLSDBPORT/$DBPORT/g" /var/www/.env
+sed -i "s/TOOLSDEBUG/$TOOLSDEBUG/g" /var/www/.env
 sed -i "s/TOOLSNAME/$TOOLSNAME/g" /var/www/.env
 sed -i "s/TOOLSSCHEMA/$TOOLSSCHEMA/g" /var/www/.env
 sed -i "s/TOOLSURL/$TOOLSURL/g" /var/www/.env
